@@ -22,7 +22,6 @@ MODEL_NAME=model_iris.libsvm
 MODE=RUN_ALL
 
 
-#---run best---#
 if [ "${MODE}" = RUN_BEST ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo
 	echo "|------------------------------------------|"
@@ -31,9 +30,8 @@ if [ "${MODE}" = RUN_BEST ] || [ "${MODE}" = RUN_ALL ] ; then
 
 	$LIBSVM_PATH/svm-train -s 0 -t 0 ${TRAIN_DATA_PATH} ${MODEL_NAME}
 	$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME} ${OUTPUT_FILE_PATH}
-
-#---search best---#
-elif [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then
+fi
+if [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo
 	echo "|--------------------------------------------------|"
 	echo "|------ Comparing Different Kernal Functions ------|"
@@ -48,8 +46,8 @@ elif [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then
 		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
-
-elif [ "${MODE}" = COMPARE_SCALE ] || [ "${MODE}" = RUN_ALL ] ; then
+fi
+if [ "${MODE}" = COMPARE_SCALE ] || [ "${MODE}" = RUN_ALL ] ; then
 
 	echo
 	echo "|--------------------------------------------------------------|"
@@ -66,9 +64,6 @@ elif [ "${MODE}" = COMPARE_SCALE ] || [ "${MODE}" = RUN_ALL ] ; then
 		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH}.scale ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${TRAIN_DATA_PATH}.scale ${TEST_DATA_PATH}.scale ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
-
-else
-	echo "Invalid mode!"
 fi
 
 echo
