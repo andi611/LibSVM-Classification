@@ -16,11 +16,14 @@ OUTPUT_FILE_PATH=${4:-../result/iris_predict.csv}
 
 #---variables---#
 MODEL_NAME=model_iris.libsvm
-RUN_BEST=True
+#MODE=RUN_BEST
+#MODE=COMPARE_KERNAL
+#MODE=COMPARE_SCALE
+MODE=RUN_ALL
 
 
 #---run best---#
-if [ "${RUN_BEST}" = True ] ; then
+if [ "${MODE}" = RUN_BEST || "${MODE}" = RUN_ALL ] ; then
 	echo
 	echo "|------------------------------------------|"
 	echo "|------ Running with Best Parameters ------|"
@@ -30,7 +33,7 @@ if [ "${RUN_BEST}" = True ] ; then
 	$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME} ${OUTPUT_FILE_PATH}
 
 #---search best---#
-else
+elif [ "${MODE}" = COMPARE_KERNAL || "${MODE}" = RUN_ALL ] ; then
 	echo
 	echo "|--------------------------------------------------|"
 	echo "|------ Comparing Different Kernal Functions ------|"
@@ -45,6 +48,8 @@ else
 		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
+
+elif [ "${MODE}" = COMPARE_SCALE || "${MODE}" = RUN_ALL ] ; then
 
 	echo
 	echo "|--------------------------------------------------------------|"
@@ -62,6 +67,8 @@ else
 		rm ${TRAIN_DATA_PATH}.scale ${TEST_DATA_PATH}.scale ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
 
+else
+	echo "Invalid mode!"
 fi
 
 echo
