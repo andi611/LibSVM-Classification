@@ -12,5 +12,9 @@ TEST_DATA_PATH=${3:-../data/iris/iris.te}
 OUTPUT_FILE_PATH=${4:-../result/iris_predict.csv}
 
 echo "Running different kernal functions..."
-$LIBSVM_PATH/svm-train $TRAIN_DATA_PATH ./model_iris.libsvm
-$LIBSVM_PATH/svm-predict $TEST_DATA_PATH ./model_iris.libsvm $OUTPUT_FILE_PATH
+kernals=( 1 2 3 4 5 )
+for i in "${kernals[@]}"
+do
+	$LIBSVM_PATH/svm-train -s 0 -t $i -q $TRAIN_DATA_PATH ./model_iris.libsvm
+	$LIBSVM_PATH/svm-predict $TEST_DATA_PATH ./model_iris.libsvm $OUTPUT_FILE_PATH
+done
