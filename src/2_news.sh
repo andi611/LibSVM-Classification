@@ -60,22 +60,22 @@ if [ "${MODE}" = COMPARE_NUSVM ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo "|------ Comparing Different Linear NU-SVM Settings ------|"
 	echo "|--------------------------------------------------------|"
 
-	cs=( 0.001 0.1 0.0 1 10 100 )
-	for ((idx=0; idx<${#cs[@]}; ++idx));
-	do
-		echo
-		echo ">>> C value: ${cs[idx]}"
-		$LIBSVM_PATH/svm-train -s 0 -t 0 -c ${cs[idx]} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
-		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
-		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
-	done
-
-	epsilons=( 0.00001 0.0001 0.001 0.01 0.1 1.0 2.0 3.0 4.0 )
+	epsilons=( 0.00001 0.0001 0.001 0.01 0.1 1.0 2.0 3.0 4.0 10.0 )
 	for ((idx=0; idx<${#epsilons[@]}; ++idx));
 	do
 		echo
 		echo ">>> epsilon value: ${epsilons[idx]}"
 		$LIBSVM_PATH/svm-train -s 0 -t 0 -e ${epsilons[idx]} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
+		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
+	done
+
+	classes=( 0 1 2 3 )
+	for ((idx=0; idx<${#classes[@]}; ++idx));
+	do
+		echo
+		echo ">>> Class i: ${cs[idx]}"
+		$LIBSVM_PATH/svm-train -s 0 -t 0 -e 0.01 -w${classes[idx]} 1.5 -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
 		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
