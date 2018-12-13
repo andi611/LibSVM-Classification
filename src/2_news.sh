@@ -1,7 +1,7 @@
 #!/bin/bash
 #*********************************************************************************************#
-#   FileName     [ 1_iris.sh ]
-#   Synopsis     [ script that runs Libsvm on the Iris dataset ]
+#   FileName     [ 2_news.sh ]
+#   Synopsis     [ script that runs Libsvm on the News dataset ]
 #   Author       [ Ting-Wei Liu (Andi611) ]
 #   Copyright    [ Copyleft(c), NTUEE, NTU, Taiwan ]
 #*********************************************************************************************#
@@ -16,8 +16,8 @@ OUTPUT_FILE_PATH=${4:-../result/news_predict.csv}
 
 #---variables---#
 MODEL_NAME=model_news.libsvm
-MODE=RUN_BEST
-#MODE=COMPARE_KERNAL
+#MODE=RUN_BEST
+MODE=COMPARE_KERNAL
 #MODE=COMPARE_SCALE
 #MODE=RUN_ALL
 
