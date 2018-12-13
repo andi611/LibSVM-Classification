@@ -48,7 +48,7 @@ if [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then
 	do
 		echo
 		echo ">>> Kernal function: ${kernals[idx]}"
-		$LIBSVM_PATH/svm-train -s 0 -t ${idx} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-train -s 1 -t ${idx} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
 		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
