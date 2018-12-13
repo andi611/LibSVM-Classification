@@ -60,22 +60,22 @@ if [ "${MODE}" = COMPARE_NUSVM ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo "|------ Comparing Different Linear NU-SVM Settings ------|"
 	echo "|--------------------------------------------------------|"
 
-	nus=( 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 )
-	for ((idx=0; idx<${#nus[@]}; ++idx));
-	do
-		echo
-		echo ">>> nu value: ${nus[idx]}"
-		$LIBSVM_PATH/svm-train -s 1 -t 0 -n ${nus[idx]} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
-		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
-		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
-	done
-
-	cs=( 0.1 0.0 1 2 3 4 5 6 7 )
+	cs=( 0.001 0.1 0.0 1 10 100 )
 	for ((idx=0; idx<${#cs[@]}; ++idx));
 	do
 		echo
 		echo ">>> C value: ${cs[idx]}"
-		$LIBSVM_PATH/svm-train -s 1 -t 0 -n 0.2 -c ${cs[idx]} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-train -s 0 -t 0 -c ${cs[idx]} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
+		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
+	done
+
+	epsilons=( 0.00001 0.0001 0.001 0.01 0.1 1.0 2.0 3.0 4.0 )
+	for ((idx=0; idx<${#epsilons[@]}; ++idx));
+	do
+		echo
+		echo ">>> epsilon value: ${epsilons[idx]}"
+		$LIBSVM_PATH/svm-train -s 0 -t 0 -e ${epsilons[idx]} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
 		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
