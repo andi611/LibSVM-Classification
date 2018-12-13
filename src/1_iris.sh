@@ -29,6 +29,10 @@ if [ "${MODE}" = RUN_BEST ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo "|------------------------------------------|"
 
 	$LIBSVM_PATH/svm-train -s 0 -t 0 ${TRAIN_DATA_PATH} ${MODEL_NAME}
+	echo "Training:"
+	$LIBSVM_PATH/svm-predict ${TRAIN_DATA_PATH} ${MODEL_NAME} ${OUTPUT_FILE_PATH}.train
+	rm ${OUTPUT_FILE_PATH}.train
+	echo "Testing:"
 	$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME} ${OUTPUT_FILE_PATH}
 fi
 if [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then
