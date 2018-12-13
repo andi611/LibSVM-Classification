@@ -1,7 +1,7 @@
 #!/bin/bash
 #*********************************************************************************************#
-#   FileName     [ 2_news.sh ]
-#   Synopsis     [ script that runs Libsvm on the News dataset ]
+#   FileName     [ 4_income.sh ]
+#   Synopsis     [ script that runs Libsvm on the Income dataset ]
 #   Author       [ Ting-Wei Liu (Andi611) ]
 #   Copyright    [ Copyleft(c), NTUEE, NTU, Taiwan ]
 #*********************************************************************************************#
@@ -9,18 +9,23 @@
 
 #---arguments---#
 LIBSVM_PATH=${1:-/home/andi611/LibSVM-Classification/libsvm-3.23}
-TRAIN_DATA_PATH=${2:-../data/news/news.tr}
-TEST_DATA_PATH=${3:-../data/news/news.te}
-OUTPUT_FILE_PATH=${4:-../result/news_predict.csv}
+TRAIN_DATA_PATH=${2:-../data/income/income_train.csv}
+TEST_DATA_PATH=${3:-../data/income/income_test.csv}
+OUTPUT_FILE_PATH=${4:-../result/income_predict.csv}
 
 
 #---variables---#
-MODEL_NAME=model_news.libsvm
+MODEL_NAME=model_income.libsvm
+PROCESSED_TRAIN_DATA=income.tr
+PROCESSED_TEST_DATA=income.te
 MODE=RUN_BEST
 #MODE=COMPARE_KERNAL
 #MODE=COMPARE_CSVM
 #MODE=COMPARE_SCALE
 #MODE=RUN_ALL
+
+python3 data_loader.py --data_income --train_path_abalone ${TRAIN_DATA_PATH} --test_path_abalone ${TEST_DATA_PATH} \
+					   --output_train_path_abalone ${PROCESSED_TRAIN_DATA} --output_test_path_abalone ${PROCESSED_TEST_DATA}
 
 
 #---run best---#
@@ -30,12 +35,12 @@ if [ "${MODE}" = RUN_BEST ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo "|------ Running with Best Parameters ------|"
 	echo "|------------------------------------------|"
 
-	$LIBSVM_PATH/svm-train -s 0 -t 0 -e 0.01 -w3 1.5 ${TRAIN_DATA_PATH} ${MODEL_NAME}
+	$LIBSVM_PATH/svm-train -s 0 -t 0 -h 0 -m 1000 ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}
 	echo "Training:"
-	$LIBSVM_PATH/svm-predict ${TRAIN_DATA_PATH} ${MODEL_NAME} ${OUTPUT_FILE_PATH}.train
-	rm ${OUTPUT_FILE_PATH}.train
+	$LIBSVM_PATH/svm-predict ${PROCESSED_TRAIN_DATA} ${MODEL_NAME} ${OUTPUT_FILE_PATH}.train
+	rm ${OUTPUT_FILE_PATH}.train 
 	echo "Testing:"
-	$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME} ${OUTPUT_FILE_PATH}
+	$LIBSVM_PATH/svm-predict ${PROCESSED_TEST_DATA} ${MODEL_NAME} ${OUTPUT_FILE_PATH}
 fi
 
 if [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then
@@ -49,9 +54,7 @@ if [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then
 	do
 		echo
 		echo ">>> Kernal function: ${kernals[idx]}"
-		$LIBSVM_PATH/svm-train -s 1 -t ${idx} -e 0.01 -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
-		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
-		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-train -s 2 -t ${idx} -h 0 -m 1000 -v 10 -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}.temp
 	done
 fi
 
@@ -66,18 +69,18 @@ if [ "${MODE}" = COMPARE_CSVM ] || [ "${MODE}" = RUN_ALL ] ; then
 	do
 		echo
 		echo ">>> epsilon value: ${epsilons[idx]}"
-		$LIBSVM_PATH/svm-train -s 0 -t 0 -e ${epsilons[idx]} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
-		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
+		$LIBSVM_PATH/svm-train -s 0 -t 0 -e ${epsilons[idx]} -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-predict ${PROCESSED_TEST_DATA} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
 
-	classes=( 0 1 2 3 )
-	for ((idx=0; idx<${#classes[@]}; ++idx));
+	cs=( 1 10 20 30 40 50 60 )
+	for ((idx=0; idx<${#cs[@]}; ++idx));
 	do
 		echo
-		echo ">>> Class i: ${classes[idx]}"
-		$LIBSVM_PATH/svm-train -s 0 -t 0 -e 0.01 -w${classes[idx]} 1.5 -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
-		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
+		echo ">>> C values: ${cs[idx]}"
+		$LIBSVM_PATH/svm-train -s 0 -t 0 -e 0.01 -c ${cs[idx]} -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-predict ${PROCESSED_TEST_DATA} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
 fi
@@ -93,14 +96,15 @@ if [ "${MODE}" = COMPARE_SCALE ] || [ "${MODE}" = RUN_ALL ] ; then
 	do
 		echo
 		echo ">>> Kernal function: ${kernals[idx]}"
-		$LIBSVM_PATH/svm-scale -l 0 -u 1 ${TRAIN_DATA_PATH} > ${TRAIN_DATA_PATH}.scale
-		$LIBSVM_PATH/svm-scale -l 0 -u 1 ${TEST_DATA_PATH} > ${TEST_DATA_PATH}.scale
-		$LIBSVM_PATH/svm-train -s 1 -t ${idx} -e 0.01 -q ${TRAIN_DATA_PATH}.scale ${MODEL_NAME}.temp
-		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH}.scale ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
-		rm ${TRAIN_DATA_PATH}.scale ${TEST_DATA_PATH}.scale ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-scale -l 0 -u 1 ${PROCESSED_TRAIN_DATA} > ${PROCESSED_TRAIN_DATA}.scale
+		$LIBSVM_PATH/svm-scale -l 0 -u 1 ${PROCESSED_TEST_DATA} > ${PROCESSED_TEST_DATA}.scale
+		$LIBSVM_PATH/svm-train -s 0 -t ${idx} -e 0.01 -c 20 -q ${PROCESSED_TRAIN_DATA}.scale ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-predict ${PROCESSED_TEST_DATA}.scale ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
+		rm ${PROCESSED_TRAIN_DATA}.scale ${PROCESSED_TEST_DATA}.scale ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
 fi
 
+rm ${PROCESSED_TRAIN_DATA} ${PROCESSED_TEST_DATA}
 echo
 echo "Done!"
 

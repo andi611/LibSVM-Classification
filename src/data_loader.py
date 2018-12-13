@@ -15,6 +15,7 @@ import argparse
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import Normalizer
 from sklearn.base import TransformerMixin
 
@@ -24,6 +25,7 @@ from sklearn.base import TransformerMixin
 ##################
 def get_config():
 	parser = argparse.ArgumentParser(description='data_loader_args')
+	parser.add_argument('--verbose', action='store_true', help='Print data parsing information')
 
 	data_args = parser.add_argument_group('data')
 	data_args.add_argument('--data_abalone', action='store_true', help='Training and testing on the Abalone dataset')
@@ -54,6 +56,8 @@ class data_loader(object):
 
 	def __init__(self, args):
 		
+		self.verbose = args.verbose
+
 		#---training paths---#
 		self.train_path_abalone = args.train_path_abalone
 		self.train_path_income = args.train_path_income
@@ -120,7 +124,7 @@ class data_loader(object):
 		return np.asarray(train_x)[:,1:].astype(np.float), np.asarray(test_x)[:,1:].astype(np.float)
 
 
-	def _preprocess_income(self, train_x, test_x, norm=False):
+	def _preprocess_income(self, train_x, test_x, to_index=False, one_hot=False, norm=False):
 
 		#---separate str and int dtype---#
 		train_x = self._to_different_dtype(train_x)
@@ -144,11 +148,20 @@ class data_loader(object):
 		test_x_cat = np.take(test_x, indices=categorical_features, axis=1)
 		test_x_con = np.take(test_x, indices=continuous_features, axis=1).astype(np.float64)
 
+		#---transform categocial to index---#
+		if to_index:
+			labeler = LabelEncoder()
+			for i in range(len(train_x_cat[0])):
+				labeler.fit(train_x_cat[:,i])
+				train_x_cat[:,i] = labeler.transform(train_x_cat[:,i])
+				test_x_cat[:,i] = labeler.transform(test_x_cat[:,i])
+
 		#---transform categocial to one hot---#
-		encoder = OneHotEncoder(handle_unknown='ignore')
-		encoder.fit(train_x_cat)
-		train_x_cat = encoder.transform(train_x_cat).toarray()
-		test_x_cat = encoder.transform(test_x_cat).toarray()
+		if one_hot:
+			encoder = OneHotEncoder(handle_unknown='ignore')
+			encoder.fit(train_x_cat)
+			train_x_cat = encoder.transform(train_x_cat).toarray()
+			test_x_cat = encoder.transform(test_x_cat).toarray()
 
 		# #---normalize continuous data---#
 		if norm:
@@ -169,7 +182,7 @@ class data_loader(object):
 		train_x, train_y = self._read_data(self.train_path_abalone, dtype='str')
 		test_x, test_y = self._read_data(self.test_path_abalone, dtype='str')
 		train_x, test_x = self._preprocess_abalone(train_x, test_x)
-		self._check_and_display(train_x, train_y, test_x, test_y)
+		if self.verbose: self._check_and_display(train_x, train_y, test_x, test_y)
 		return train_x, train_y, test_x, test_y
 
 
@@ -177,8 +190,8 @@ class data_loader(object):
 		print('>> [Data Loader] Reading the Income dataset...')
 		train_x, train_y = self._read_data(self.train_path_income, dtype='str')
 		test_x = self._read_data(self.test_path_income, dtype='str', with_label=False)
-		train_x, test_x = self._preprocess_income(train_x, test_x)
-		self._check_and_display(train_x, train_y, test_x)
+		train_x, test_x = self._preprocess_income(train_x, test_x, to_index=True)
+		if self.verbose: self._check_and_display(train_x, train_y, test_x)
 		return train_x, train_y, test_x, None
 
 
@@ -204,6 +217,20 @@ class DataImputer(TransformerMixin):
 		return X.fillna(self.fill)
 
 
+####################
+# WRITE FOR LIBSVM #
+####################
+def write_for_LibSVM(file_path, x_data, y_data):
+	with open(file_path, 'w') as file:
+		for i in range(len(x_data)):
+			if y_data != None: file.write(str(y_data[i]))
+			line = ''
+			for j in range(len(x_data[i])):
+				line = line + ' ' + str(j+1) + ':' + str(x_data[i][j])
+			file.write(line)
+			file.write('\n')
+
+
 ########
 # MAIN #
 ########
@@ -218,9 +245,13 @@ def main():
 	#---fetch data---#
 	if args.data_abalone:
 		train_x, train_y, test_x, test_y = loader.fetch_abalone()
+		write_for_LibSVM(args.output_train_path_abalone, train_x, train_y)
+		write_for_LibSVM(args.output_test_path_abalone, test_x, test_y)
 
 	elif args.data_income:
 		train_x, train_y, test_x, test_y = loader.fetch_income()
+		write_for_LibSVM(args.output_train_path_income, train_x, train_y)
+		write_for_LibSVM(args.output_test_path_income, test_x, test_y)
 
 
 if __name__ == '__main__':

@@ -16,10 +16,10 @@ OUTPUT_FILE_PATH=${4:-../result/iris_predict.csv}
 
 #---variables---#
 MODEL_NAME=model_iris.libsvm
-#MODE=RUN_BEST
-#MODE=COMPARE_KERNAL
+MODE=RUN_BEST
+#ODE=COMPARE_KERNAL
 #MODE=COMPARE_SCALE
-MODE=RUN_ALL
+#MODE=RUN_ALL
 
 
 if [ "${MODE}" = RUN_BEST ] || [ "${MODE}" = RUN_ALL ] ; then
@@ -35,6 +35,7 @@ if [ "${MODE}" = RUN_BEST ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo "Testing:"
 	$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME} ${OUTPUT_FILE_PATH}
 fi
+
 if [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo
 	echo "|--------------------------------------------------|"
@@ -51,13 +52,15 @@ if [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
 fi
+
 if [ "${MODE}" = COMPARE_SCALE ] || [ "${MODE}" = RUN_ALL ] ; then
 
 	echo
-	echo "|--------------------------------------------------------------|"
-	echo "|------ Comparing Different Kernal Functions with Scaling------|"
-	echo "|--------------------------------------------------------------|"
+	echo "|---------------------------------------------------------------|"
+	echo "|------ Comparing Different Kernal Functions with Scaling ------|"
+	echo "|---------------------------------------------------------------|"
 
+	kernals=( linear polynomial radial_basis sigmoid precomputed_kernal )
 	for ((idx=0; idx<${#kernals[@]}; ++idx));
 	do
 		echo
