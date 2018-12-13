@@ -19,25 +19,28 @@
 ```
 .
 ├── src/
-|   ├── classifiers.py ----------> Implementation of the naive bayes and decision tree classifiers
-|   ├── data_loader.py ----------> Data loader that handles the reading and preprocessing of all 3 datasets
-|   └── runner.py ---------------> Runner that runs all modes: train + evaluate, search optimal model, visualize model, etc.
-├── data/ -----------------------> unzip data.zip
-|   ├── income
-|   |   ├── income_test.csv
-|   |   ├── income_train.csv
-|   |   ├── income.names
-|   |   └── sample_output.csv
-|   ├── mushroom
-|   |   ├── mushroom_test.csv
-|   |   ├── mushroom_train.csv
-|   |   ├── mushroom.names
-|   |   └── sample_output.csv
-|   └── news
-|       ├── news_test.csv
-|       ├── news_train.csv
-|       └── sample_output.csv
-├── image/ ----------------------> visualization and program output screen shots
+|   ├── 1_iris.sh
+|   ├── 2_news.sh
+|   ├── 3_abalone.sh
+|   ├── 4_income.sh
+|   └── data_loader.py
+├── data/
+|   ├── iris
+|   |   ├── iris.tr
+|   |   ├── iris.te
+|   |   └── iris.names
+|   ├── news
+|   |   ├── news.tr
+|   |   ├── news.te
+|   |   └── news.names
+|   ├── abalone
+|   |   ├── abalone_test.csv
+|   |   ├── abalone_train.csv
+|   |   └── abalone.names
+|   └── income
+|       ├── income_test.csv
+|       ├── income_train.csv
+|       └── income.names
 ├── result/ ---------------------> model prediction output
 ├── problem_description.pdf -----> Work spec
 └── Readme.md -------------------> This file
@@ -99,7 +102,7 @@
 
 | Kernal Type  | Testing Accuracy | Testing Accuracy with Scaling |
 | ------------- | ------------- | ------------- |
-| Linear | 83.36% | 79.86% |
+| Linear | **83.36%** | 79.86% |
 | Polynomial | 49.51% | 35.59% |
 | Radial Basis Function | 70.91% | 69.02% |
 | Sigmoid  | 70.91% | 67.62% |
@@ -107,10 +110,11 @@
 ### Abalone Dataset Results
 - Best model training accuracy: **65.16%**
 - Best model testing accuracy: **66.63%**
+- Parameter and setting for best model: `svm-train -s 0 -t 0 -e 0.01 -c 20`
 
 | Kernal Type  | Testing Accuracy | Testing Accuracy with Scaling |
 | ------------- | ------------- | ------------- |
-| Linear | 66.63% | 57.81% |
+| Linear | **66.63%** | 57.81% |
 | Polynomial | 61.84% | 57.91% |
 | Radial Basis Function | 66.25% | 55.90% |
 | Sigmoid  | 56.28% | 54.94% |
@@ -154,6 +158,3 @@
     - Normalize with maximum norm of that feature column
 - Re-concatenate categorical features and continuous features.
 - Write to LibSVM format.
-
-
-<img src=https://github.com/andi611/Naive-Bayes-and-Decision-Tree-Classifiers/blob/master/image/income_preprocessing.png width="423" height="70">
