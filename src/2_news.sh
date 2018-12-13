@@ -16,9 +16,9 @@ OUTPUT_FILE_PATH=${4:-../result/news_predict.csv}
 
 #---variables---#
 MODEL_NAME=model_news.libsvm
-#MODE=RUN_BEST
+MODE=RUN_BEST
 #MODE=COMPARE_KERNAL
-MODE=COMPARE_NUSVM
+#MODE=COMPARE_NUSVM
 #MODE=COMPARE_SCALE
 #MODE=RUN_ALL
 
@@ -30,7 +30,7 @@ if [ "${MODE}" = RUN_BEST ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo "|------ Running with Best Parameters ------|"
 	echo "|------------------------------------------|"
 
-	$LIBSVM_PATH/svm-train -s 0 -t 0 -q ${TRAIN_DATA_PATH} ${MODEL_NAME}
+	$LIBSVM_PATH/svm-train -s 0 -t 0 -e 0.01 -w3 1.5 -q ${TRAIN_DATA_PATH} ${MODEL_NAME}
 	echo "Training:"
 	$LIBSVM_PATH/svm-predict ${TRAIN_DATA_PATH} ${MODEL_NAME} ${OUTPUT_FILE_PATH}.train
 	rm ${OUTPUT_FILE_PATH}.train
@@ -57,7 +57,7 @@ fi
 if [ "${MODE}" = COMPARE_NUSVM ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo
 	echo "|--------------------------------------------------------|"
-	echo "|------ Comparing Different Linear NU-SVM Settings ------|"
+	echo "|------ Comparing Different Linear C-SVM Settings ------|"
 	echo "|--------------------------------------------------------|"
 
 	epsilons=( 0.00001 0.0001 0.001 0.01 0.1 1.0 2.0 3.0 4.0 10.0 )
@@ -74,7 +74,7 @@ if [ "${MODE}" = COMPARE_NUSVM ] || [ "${MODE}" = RUN_ALL ] ; then
 	for ((idx=0; idx<${#classes[@]}; ++idx));
 	do
 		echo
-		echo ">>> Class i: ${cs[idx]}"
+		echo ">>> Class i: ${classes[idx]}"
 		$LIBSVM_PATH/svm-train -s 0 -t 0 -e 0.01 -w${classes[idx]} 1.5 -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
 		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
