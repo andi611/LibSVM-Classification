@@ -70,12 +70,12 @@ if [ "${MODE}" = COMPARE_NUSVM ] || [ "${MODE}" = RUN_ALL ] ; then
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
 
-	epsilons=( 0.00001 0.0001 0.001 0.01 0.1 1.0 2.0 )
-	for ((idx=0; idx<${#epsilons[@]}; ++idx));
+	cs=( 0.1 0.0 1 2 3 4 5 6 7 )
+	for ((idx=0; idx<${#cs[@]}; ++idx));
 	do
 		echo
-		echo ">>> epsilon value: ${epsilons[idx]}"
-		$LIBSVM_PATH/svm-train -s 0 -t 0 -e ${epsilons[idx]} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
+		echo ">>> C value: ${cs[idx]}"
+		$LIBSVM_PATH/svm-train -s 0 -t 0 -c ${cs[idx]} -q ${TRAIN_DATA_PATH} ${MODEL_NAME}.temp
 		$LIBSVM_PATH/svm-predict ${TEST_DATA_PATH} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
