@@ -18,10 +18,10 @@ OUTPUT_FILE_PATH=${4:-../result/income_predict.csv}
 MODEL_NAME=model_income.libsvm
 PROCESSED_TRAIN_DATA=income.tr
 PROCESSED_TEST_DATA=income.te
-MODE=RUN_BEST
+#MODE=RUN_BEST
 #MODE=COMPARE_KERNAL
 #MODE=COMPARE_CSVM
-#MODE=COMPARE_SCALE
+MODE=COMPARE_SCALE
 #MODE=RUN_ALL
 
 python3 data_loader.py --data_income --train_path_abalone ${TRAIN_DATA_PATH} --test_path_abalone ${TEST_DATA_PATH} \
@@ -54,7 +54,7 @@ if [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then
 	do
 		echo
 		echo ">>> Kernal function: ${kernals[idx]}"
-		$LIBSVM_PATH/svm-train -s 2 -t ${idx} -h 0 -m 1000 -v 10 -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-train -s 0 -t ${idx} -h 0 -m 1000 -e 0.01 -v 3 ${PROCESSED_TRAIN_DATA}
 	done
 fi
 
@@ -97,10 +97,8 @@ if [ "${MODE}" = COMPARE_SCALE ] || [ "${MODE}" = RUN_ALL ] ; then
 		echo
 		echo ">>> Kernal function: ${kernals[idx]}"
 		$LIBSVM_PATH/svm-scale -l 0 -u 1 ${PROCESSED_TRAIN_DATA} > ${PROCESSED_TRAIN_DATA}.scale
-		$LIBSVM_PATH/svm-scale -l 0 -u 1 ${PROCESSED_TEST_DATA} > ${PROCESSED_TEST_DATA}.scale
-		$LIBSVM_PATH/svm-train -s 0 -t ${idx} -e 0.01 -c 20 -q ${PROCESSED_TRAIN_DATA}.scale ${MODEL_NAME}.temp
-		$LIBSVM_PATH/svm-predict ${PROCESSED_TEST_DATA}.scale ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
-		rm ${PROCESSED_TRAIN_DATA}.scale ${PROCESSED_TEST_DATA}.scale ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-train -s 0 -t ${idx} -c 2 -h 0 -m 1000 -v 10 -q ${PROCESSED_TRAIN_DATA}.scale
+		rm ${PROCESSED_TRAIN_DATA}.scale
 	done
 fi
 

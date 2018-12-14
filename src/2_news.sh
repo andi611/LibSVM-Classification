@@ -30,7 +30,7 @@ if [ "${MODE}" = RUN_BEST ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo "|------ Running with Best Parameters ------|"
 	echo "|------------------------------------------|"
 
-	$LIBSVM_PATH/svm-train -s 0 -t 0 -e 0.01 -w3 1.5 ${TRAIN_DATA_PATH} ${MODEL_NAME}
+	$LIBSVM_PATH/svm-train -s 0 -t 0 -e 0.01 -w3 2.5 ${TRAIN_DATA_PATH} ${MODEL_NAME}
 	echo "Training:"
 	$LIBSVM_PATH/svm-predict ${TRAIN_DATA_PATH} ${MODEL_NAME} ${OUTPUT_FILE_PATH}.train
 	rm ${OUTPUT_FILE_PATH}.train

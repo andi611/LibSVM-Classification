@@ -142,7 +142,7 @@ class data_loader(object):
 		
 		#---split into categorical and continuous---#
 		categorical_features = [1, 3, 5, 6, 7, 8, 9, 13]
-		continuous_features = [0, 2, 4, 10, 11, 12]
+		continuous_features = [0, 2, 10, 11, 12] # -> drop column 4 educatuin num
 		train_x_cat = np.take(train_x, indices=categorical_features, axis=1)
 		train_x_con = np.take(train_x, indices=continuous_features, axis=1).astype(np.float64)
 		test_x_cat = np.take(test_x, indices=categorical_features, axis=1)
@@ -224,6 +224,7 @@ def write_for_LibSVM(file_path, x_data, y_data):
 	with open(file_path, 'w') as file:
 		for i in range(len(x_data)):
 			if y_data != None: file.write(str(y_data[i]))
+			else: file.write(str(0))
 			line = ''
 			for j in range(len(x_data[i])):
 				line = line + ' ' + str(j+1) + ':' + str(x_data[i][j])

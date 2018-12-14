@@ -97,8 +97,8 @@
 
 ### News Dataset Results
 - Best model training accuracy: **97.63%**
-- Best model testing accuracy: **84.55%**
-- Parameter and setting for best model: `svm-train -s 0 -t 0 -e 0.01 -w3 1.5`
+- Best model testing accuracy: **84.97%**
+- Parameter and setting for best model: `svm-train -s 0 -t 0 -e 0.01 -w3 2.5`
 
 | Kernal Type  | Testing Accuracy | Testing Accuracy with Scaling |
 | ------------- | ------------- | ------------- |
@@ -151,7 +151,8 @@
     - If dtype is `str`: impute with most frequent item in the feature column
 - Split data into categorical and continuous and process them separately:
     - categorical features index = [1, 3, 5, 6, 7, 8, 9, 13]
-    - continuous features index = [0, 2, 4, 10, 11, 12]
+    - continuous features index = [0, 2, 10, 11, 12]
+    - here I droped column index #4 (education num) since it is a dupicate of column index #3 (education)
 - For categorical data:
     - 8 categorical attributes are transformed into a 99 dimension one-hot feature vector
 - For continuous data:
