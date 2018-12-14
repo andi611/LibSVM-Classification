@@ -150,8 +150,8 @@ class data_loader(object):
 
 		#---transform categocial to index---#
 		if to_index:
-			labeler = LabelEncoder()
 			for i in range(len(train_x_cat[0])):
+				labeler = LabelEncoder()
 				labeler.fit(train_x_cat[:,i])
 				train_x_cat[:,i] = labeler.transform(train_x_cat[:,i])
 				test_x_cat[:,i] = labeler.transform(test_x_cat[:,i])
