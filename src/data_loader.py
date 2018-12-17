@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import Normalizer
+from sklearn.preprocessing import StandardScaler
 from sklearn.base import TransformerMixin
 
 
@@ -163,17 +163,17 @@ class data_loader(object):
 			train_x_cat = encoder.transform(train_x_cat).toarray()
 			test_x_cat = encoder.transform(test_x_cat).toarray()
 
-		# #---normalize continuous data---#
-		if norm:
-			normalizer = Normalizer(norm='max', copy=False)
-			normalizer.fit(train_x_con)
-			train_x_con = normalizer.transform(train_x_con)
-			test_x_con = normalizer.transform(test_x_con)
-
 		#---concatenate and split---#
 		train_x = np.concatenate((train_x_cat, train_x_con), axis=1)
 		test_x = np.concatenate((test_x_cat, test_x_con), axis=1)
 		
+		# #---normalize continuous data---#
+		if norm:
+			normalizer = StandardScaler()
+			normalizer.fit(train_x)
+			train_x = normalizer.transform(train_x)
+			test_x = normalizer.transform(test_x)
+
 		return train_x, test_x
 
 
@@ -190,7 +190,7 @@ class data_loader(object):
 		print('>> [Data Loader] Reading the Income dataset...')
 		train_x, train_y = self._read_data(self.train_path_income, dtype='str')
 		test_x = self._read_data(self.test_path_income, dtype='str', with_label=False)
-		train_x, test_x = self._preprocess_income(train_x, test_x, to_index=True, one_hot=True)
+		train_x, test_x = self._preprocess_income(train_x, test_x, to_index=True, one_hot=True, norm=True)
 		if self.verbose: self._check_and_display(train_x, train_y, test_x)
 		return train_x, train_y, test_x, None
 
