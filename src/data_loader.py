@@ -143,7 +143,7 @@ class data_loader(object):
 		
 		if one_hot:
 			categorical_features = [1, 3, 5, 6, 7, 8, 9, 13]
-			transformer = ColumnTransformer(transformers=[('one-hot-encoder'), OneHotEncoder(sparse=False, categorical_features)], 
+			transformer = ColumnTransformer(transformers=[('one-hot-encoder', OneHotEncoder(sparse=False), categorical_features)], 
 											remainder='passthrough')
 			train_x = transform.fir_transform(train_x)
 			test_x = transform.fir_transform(test_x)
