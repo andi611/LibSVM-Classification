@@ -19,9 +19,9 @@ MODEL_NAME=model_income.libsvm
 PROCESSED_TRAIN_DATA=income.tr
 PROCESSED_TEST_DATA=income.te
 #MODE=RUN_BEST
-MODE=COMPARE_KERNAL
+#MODE=COMPARE_KERNAL
 #MODE=COMPARE_CSVM
-#MODE=COMPARE_SCALE
+MODE=COMPARE_SCALE
 #MODE=RUN_ALL
 
 python3 data_loader.py --data_income --train_path_abalone ${TRAIN_DATA_PATH} --test_path_abalone ${TEST_DATA_PATH} \
@@ -97,7 +97,7 @@ if [ "${MODE}" = COMPARE_SCALE ] || [ "${MODE}" = RUN_ALL ] ; then
 		echo
 		echo ">>> Kernal function: ${kernals[idx]}"
 		$LIBSVM_PATH/svm-scale -l 0 -u 1 ${PROCESSED_TRAIN_DATA} > ${PROCESSED_TRAIN_DATA}.scale
-		$LIBSVM_PATH/svm-train -s 0 -t ${idx} -h 0 -m 1000 -e 0.01 -v 3 -q ${PROCESSED_TRAIN_DATA}.scale
+		$LIBSVM_PATH/svm-train -s 0 -t ${idx} -v 3 -q ${PROCESSED_TRAIN_DATA}.scale
 		rm ${PROCESSED_TRAIN_DATA}.scale
 	done
 fi

@@ -125,10 +125,10 @@
 
 | Kernel Type  | Cross Validation Accuracy | Cross Validation Accuracy with Scaling |
 | ------------- | ------------- | ------------- |
-| Linear | 84.68% | 84.68% |
-| Polynomial | 75.96% | 75.96% |
-| Radial Basis Function | 83.09% | 83.09% |
-| Sigmoid  | 82.99% | 82.99% |
+| Linear | 40.59% | 84.68% |
+| Polynomial | 59.18% | 75.96% |
+| Radial Basis Function | 75.48% | 83.09% |
+| Sigmoid  | 75.96% | 82.99% |
 
 ## Data Preprocessing
 
@@ -140,8 +140,8 @@
 
 ### Abalone Dataset Preprocessing
 - Specify each entry to either one of the data type: (`int`, `str`)
-- Change the first column (which is categorical and in `str`) into one-hot encoding vectors.
-- Write to LibSVM format.
+- Change the first column (the sex attribute which is categorical and in `str`) into one-hot encoding vectors.
+- Write the resulting feature into LibSVM format.
 
 ### Income Dataset Preprocessing
 - Specify each entry to either one of the data type: (`int`, `str`)
@@ -152,10 +152,10 @@
 - Split data into categorical and continuous and process them separately:
     - categorical features index = [1, 3, 5, 6, 7, 8, 9, 13]
     - continuous features index = [0, 2, 10, 11, 12]
-    - here I droped column index #4 (education num) since it is a dupicate of column index #3 (education)
+    - here I dropped column index #4 (education num) since it is a duplicate of column index #3 (education)
 - For categorical data:
-    - 8 categorical attributes are transformed into a 99 dimension one-hot feature vector
+    - 8 categorical attributes are transformed into a 99 dimension one-hot feature vector.
 - For continuous data:
-    - Normalize with maximum norm of that feature column
+    - Normalize with maximum norm of that feature column.
 - Re-concatenate categorical features and continuous features.
-- Write to LibSVM format.
+- Write the resulting feature into LibSVM format.
