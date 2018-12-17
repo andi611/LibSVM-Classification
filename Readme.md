@@ -1,5 +1,4 @@
 # Data Mining: Classification with LIBSVM
-![](https://github.com/andi611/Naive-Bayes-and-Decision-Tree-Classifiers/blob/master/image/TREE_NEWS.png)
 - Datasets:
     - Iris
     - News (subset of 20 Newsgroups dataset, with testing label)
@@ -123,12 +122,12 @@
 - Best model training accuracy: **97.63%**
 - Best model testing accuracy: **84.55%**
 
-| Kernel Type  | Cross Validation Accuracy | Cross Validation Accuracy with Scaling |
-| ------------- | ------------- | ------------- |
-| Linear | 84.64% | 84.68% |
-| Polynomial | 82.86% | 75.96% |
-| Radial Basis Function | 84.66% | 83.09% |
-| Sigmoid  | 82.83% | 82.99% |
+| Kernel Type  | Cross Validation Accuracy | Cross Validation Accuracy with Sklearn Scaling | Cross Validation Accuracy with LibSVM Scaling |
+| ------------- | ------------- | ------------- | ------------- |
+| Linear | 53.67% | 85.07% | 84.99% |
+| Polynomial | 44.37% | 82.91% | 75.96% |
+| Radial Basis Function | 75.68% | 84.76% | 83.47% |
+| Sigmoid  | 75.96% | 83.11% | 83.41% |
 
 ## Data Preprocessing
 
@@ -151,11 +150,8 @@
     - If dtype is `str`: impute with most frequent item in the feature column
 - Split data into categorical and continuous and process them separately:
     - categorical features index = [1, 3, 5, 6, 7, 8, 9, 13]
-    - continuous features index = [0, 2, 10, 11, 12]
-    - here I dropped column index #4 (education num) since it is a duplicate of column index #3 (education)
+    - continuous features index = [0, 2, 4, 10, 11, 12]
 - For categorical data:
     - 8 categorical attributes are transformed into a 99 dimension one-hot feature vector.
-- For continuous data:
-    - Normalize with maximum norm of that feature column.
-- Re-concatenate categorical features and continuous features.
+- Normalize each attribute to zero mean and unit variance.
 - Write the resulting feature into LibSVM format.
