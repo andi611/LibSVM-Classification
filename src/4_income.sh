@@ -19,8 +19,8 @@ MODEL_NAME=model_income.libsvm
 PROCESSED_TRAIN_DATA=income.tr
 PROCESSED_TEST_DATA=income.te
 #MODE=RUN_BEST
-MODE=COMPARE_KERNAL
-#MODE=COMPARE_CSVM
+#MODE=COMPARE_KERNAL
+MODE=COMPARE_CSVM
 #MODE=COMPARE_SCALE
 #MODE=RUN_ALL
 
@@ -69,7 +69,7 @@ if [ "${MODE}" = COMPARE_CSVM ] || [ "${MODE}" = RUN_ALL ] ; then
 	do
 		echo
 		echo ">>> epsilon value: ${epsilons[idx]}"
-		$LIBSVM_PATH/svm-train -s 0 -t 0 -e ${epsilons[idx]} -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-train -s 0 -t 0 -e ${epsilons[idx]} -h 0 -m 1000 -v 3 -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}.temp
 		$LIBSVM_PATH/svm-predict ${PROCESSED_TEST_DATA} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
@@ -79,7 +79,7 @@ if [ "${MODE}" = COMPARE_CSVM ] || [ "${MODE}" = RUN_ALL ] ; then
 	do
 		echo
 		echo ">>> C values: ${cs[idx]}"
-		$LIBSVM_PATH/svm-train -s 0 -t 0 -e 0.01 -c ${cs[idx]} -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}.temp
+		$LIBSVM_PATH/svm-train -s 0 -t 0 -c ${cs[idx]} -h 0 -m 1000 -e 0.01 -v 3 -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}.temp
 		$LIBSVM_PATH/svm-predict ${PROCESSED_TEST_DATA} ${MODEL_NAME}.temp ${OUTPUT_FILE_PATH}
 		rm ${OUTPUT_FILE_PATH} ${MODEL_NAME}.temp
 	done
