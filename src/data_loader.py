@@ -14,6 +14,7 @@ import csv
 import argparse
 import numpy as np
 import pandas as pd
+from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
@@ -140,32 +141,38 @@ class data_loader(object):
 		train_x = imputer.transform(train_x).values
 		test_x = imputer.transform(test_x).values
 		
-		#---split into categorical and continuous---#
-		categorical_features = [1, 3, 5, 6, 7, 8, 9, 13]
-		continuous_features = [0, 2, 10, 11, 12] # -> drop column 4 educatuin num
-		train_x_cat = np.take(train_x, indices=categorical_features, axis=1)
-		train_x_con = np.take(train_x, indices=continuous_features, axis=1).astype(np.float64)
-		test_x_cat = np.take(test_x, indices=categorical_features, axis=1)
-		test_x_con = np.take(test_x, indices=continuous_features, axis=1).astype(np.float64)
-
-		#---transform categocial to index---#
-		if to_index:
-			for i in range(len(train_x_cat[0])):
-				labeler = LabelEncoder()
-				labeler.fit(train_x_cat[:,i])
-				train_x_cat[:,i] = labeler.transform(train_x_cat[:,i])
-				test_x_cat[:,i] = labeler.transform(test_x_cat[:,i])
-
-		#---transform categocial to one hot---#
 		if one_hot:
-			encoder = OneHotEncoder(handle_unknown='ignore')
-			encoder.fit(train_x_cat)
-			train_x_cat = encoder.transform(train_x_cat).toarray()
-			test_x_cat = encoder.transform(test_x_cat).toarray()
+			categorical_features = [1, 3, 5, 6, 7, 8, 9, 13]
+			transformer = ColumnTransformer(transformers=[('one-hot-encoder'), OneHotEncoder(sparse=False, categorical_features)], 
+											remainder='passthrough')
+			train_x = transform.fir_transform(train_x)
+			test_x = transform.fir_transform(test_x)
+		# #---split into categorical and continuous---#
+		# categorical_features = [1, 3, 5, 6, 7, 8, 9, 13]
+		# continuous_features = [0, 2, 10, 11, 12] # -> drop column 4 educatuin num
+		# train_x_cat = np.take(train_x, indices=categorical_features, axis=1)
+		# train_x_con = np.take(train_x, indices=continuous_features, axis=1).astype(np.float64)
+		# test_x_cat = np.take(test_x, indices=categorical_features, axis=1)
+		# test_x_con = np.take(test_x, indices=continuous_features, axis=1).astype(np.float64)
 
-		#---concatenate and split---#
-		train_x = np.concatenate((train_x_cat, train_x_con), axis=1)
-		test_x = np.concatenate((test_x_cat, test_x_con), axis=1)
+		# #---transform categocial to index---#
+		# if to_index:
+		# 	for i in range(len(train_x_cat[0])):
+		# 		labeler = LabelEncoder()
+		# 		labeler.fit(train_x_cat[:,i])
+		# 		train_x_cat[:,i] = labeler.transform(train_x_cat[:,i])
+		# 		test_x_cat[:,i] = labeler.transform(test_x_cat[:,i])
+
+		# #---transform categocial to one hot---#
+		# if one_hot:
+		# 	encoder = OneHotEncoder(handle_unknown='ignore')
+		# 	encoder.fit(train_x_cat)
+		# 	train_x_cat = encoder.transform(train_x_cat).toarray()
+		# 	test_x_cat = encoder.transform(test_x_cat).toarray()
+
+		# #---concatenate and split---#
+		# train_x = np.concatenate((train_x_cat, train_x_con), axis=1)
+		# test_x = np.concatenate((test_x_cat, test_x_con), axis=1)
 		
 		# #---normalize continuous data---#
 		if norm:
