@@ -131,11 +131,11 @@ class data_loader(object):
 		train_x = self._to_different_dtype(train_x)
 		test_x = self._to_different_dtype(test_x)
 
-		#---replace ? with np.nan---#
-		train_x = pd.DataFrame([[np.nan if item == '?' else item for item in row] for row in train_x])
-		test_x = pd.DataFrame([[np.nan if item == '?' else item for item in row] for row in test_x])
-
 		if impute:
+			#---replace ? with np.nan---#
+			train_x = pd.DataFrame([[np.nan if item == '?' else item for item in row] for row in train_x])
+			test_x = pd.DataFrame([[np.nan if item == '?' else item for item in row] for row in test_x])
+
 			#---impute missing value---#
 			imputer = DataImputer()
 			imputer.fit(train_x)
