@@ -97,7 +97,7 @@ if [ "${MODE}" = COMPARE_SCALE ] || [ "${MODE}" = RUN_ALL ] ; then
 		echo
 		echo ">>> Kernal function: ${kernals[idx]}"
 		$LIBSVM_PATH/svm-scale -l 0 -u 1 ${PROCESSED_TRAIN_DATA} > ${PROCESSED_TRAIN_DATA}.scale
-		$LIBSVM_PATH/svm-train -s 0 -t ${idx} -c 2 -h 0 -m 1000 -v 10 -q ${PROCESSED_TRAIN_DATA}.scale
+		$LIBSVM_PATH/svm-train -s 0 -t ${idx} -h 0 -m 1000 -e 0.01 -v 3 -q ${PROCESSED_TRAIN_DATA}.scale
 		rm ${PROCESSED_TRAIN_DATA}.scale
 	done
 fi

@@ -87,7 +87,7 @@
 - Best model testing accuracy: **100%**
 - Parameter and setting for best model: `svm-train -s 0 -t 0`
 
-| Kernal Type  | Testing Accuracy | Testing Accuracy with Scaling |
+| Kernel Type  | Testing Accuracy | Testing Accuracy with Scaling |
 | ------------- | ------------- | ------------- |
 | Linear | **100.00%** | 97.33% |
 | Polynomial | 98.66% | 70.66% |
@@ -100,7 +100,7 @@
 - Best model testing accuracy: **84.97%**
 - Parameter and setting for best model: `svm-train -s 0 -t 0 -e 0.01 -w3 2.5`
 
-| Kernal Type  | Testing Accuracy | Testing Accuracy with Scaling |
+| Kernel Type  | Testing Accuracy | Testing Accuracy with Scaling |
 | ------------- | ------------- | ------------- |
 | Linear | **83.36%** | 79.86% |
 | Polynomial | 49.51% | 35.59% |
@@ -112,7 +112,7 @@
 - Best model testing accuracy: **66.63%**
 - Parameter and setting for best model: `svm-train -s 0 -t 0 -e 0.01 -c 20`
 
-| Kernal Type  | Testing Accuracy | Testing Accuracy with Scaling |
+| Kernel Type  | Testing Accuracy | Testing Accuracy with Scaling |
 | ------------- | ------------- | ------------- |
 | Linear | **66.63%** | 57.81% |
 | Polynomial | 61.84% | 57.91% |
@@ -123,12 +123,12 @@
 - Best model training accuracy: **97.63%**
 - Best model testing accuracy: **84.55%**
 
-| Kernal Type  | Testing Accuracy | Testing Accuracy with Scaling |
+| Kernel Type  | Cross Validation Accuracy | Cross Validation Accuracy with Scaling |
 | ------------- | ------------- | ------------- |
-| Linear | % | % |
-| Polynomial | % | % |
-| Radial Basis Function | % | % |
-| Sigmoid  | % | % |
+| Linear | 84.68% | % |
+| Polynomial | 75.96% | % |
+| Radial Basis Function | 83.09% | % |
+| Sigmoid  | 82.99% | % |
 
 ## Data Preprocessing
 
