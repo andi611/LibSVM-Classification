@@ -138,12 +138,13 @@ class data_loader(object):
 		#---impute missing value---#
 		imputer = DataImputer()
 		imputer.fit(train_x)
-		train_x = imputer.transform(train_x).values
-		test_x = imputer.transform(test_x).values
+		train_x = imputer.transform(train_x).values.astype(np.float64)
+		test_x = imputer.transform(test_x).values.astype(np.float64)
 		
 		if one_hot:
 			categorical_features = [1, 3, 5, 6, 7, 8, 9, 13]
-			transformer = ColumnTransformer(transformers=[('one-hot-encoder', OneHotEncoder(sparse=False), categorical_features)], 
+			transformer = ColumnTransformer(transformers=[('one-hot-encoder', OneHotEncoder(sparse=False), categorical_features),
+														  ('unit-normalizer', StandardScaler(), range(len(train_x[0])))], 
 											remainder='passthrough')
 			train_x = transformer.fit_transform(train_x)
 			test_x = transformer.transform(test_x)
@@ -174,11 +175,11 @@ class data_loader(object):
 		# train_x = np.concatenate((train_x_cat, train_x_con), axis=1)
 		# test_x = np.concatenate((test_x_cat, test_x_con), axis=1)
 		
-		# #---normalize continuous data---#
-		if norm:
-			normalizer = StandardScaler()
-			train_x = normalizer.fit_transform(train_x)
-			test_x = normalizer.transform(test_x)
+		# # #---normalize continuous data---#
+		# if norm:
+		# 	normalizer = StandardScaler()
+		# 	train_x = normalizer.fit_transform(train_x)
+		# 	test_x = normalizer.transform(test_x)
 
 		return train_x, test_x
 
