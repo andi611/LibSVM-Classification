@@ -19,9 +19,9 @@ MODEL_NAME=model_income.libsvm
 PROCESSED_TRAIN_DATA=income.tr
 PROCESSED_TEST_DATA=income.te
 #MODE=RUN_BEST
-#MODE=COMPARE_KERNAL
+MODE=COMPARE_KERNAL
 #MODE=COMPARE_CSVM
-MODE=COMPARE_SCALE
+#MODE=COMPARE_SCALE
 #MODE=RUN_ALL
 
 python3 data_loader.py --data_income --train_path_abalone ${TRAIN_DATA_PATH} --test_path_abalone ${TEST_DATA_PATH} \

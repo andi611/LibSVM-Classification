@@ -170,7 +170,7 @@ class data_loader(object):
 		print('>> [Data Loader] Reading the Income dataset...')
 		train_x, train_y = self._read_data(self.train_path_income, dtype='str')
 		test_x = self._read_data(self.test_path_income, dtype='str', with_label=False)
-		train_x, test_x = self._preprocess_income(train_x, test_x, impute=False, one_hot=True, norm=True)
+		train_x, test_x = self._preprocess_income(train_x, test_x, impute=False, one_hot=True, norm=False)
 		if self.verbose: self._check_and_display(train_x, train_y, test_x)
 		return train_x, train_y, test_x, None
 
