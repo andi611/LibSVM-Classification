@@ -125,7 +125,7 @@ class data_loader(object):
 		return np.asarray(train_x)[:,1:].astype(np.float), np.asarray(test_x)[:,1:].astype(np.float)
 
 
-	def _preprocess_income(self, train_x, test_x, to_index=False, one_hot=False, norm=False):
+	def _preprocess_income(self, train_x, test_x, impute=False, one_hot=False, norm=False):
 
 		#---separate str and int dtype---#
 		train_x = self._to_different_dtype(train_x)
@@ -135,11 +135,12 @@ class data_loader(object):
 		train_x = pd.DataFrame([[np.nan if item == '?' else item for item in row] for row in train_x])
 		test_x = pd.DataFrame([[np.nan if item == '?' else item for item in row] for row in test_x])
 
-		#---impute missing value---#
-		imputer = DataImputer()
-		imputer.fit(train_x)
-		train_x = imputer.transform(train_x).values
-		test_x = imputer.transform(test_x).values
+		if impute:
+			#---impute missing value---#
+			imputer = DataImputer()
+			imputer.fit(train_x)
+			train_x = imputer.transform(train_x).values
+			test_x = imputer.transform(test_x).values
 		
 		if one_hot:
 			categorical_features = [1, 3, 5, 6, 7, 8, 9, 13]
@@ -147,34 +148,7 @@ class data_loader(object):
 											remainder='passthrough')
 			train_x = transformer.fit_transform(train_x)
 			test_x = transformer.transform(test_x)
-		# #---split into categorical and continuous---#
-		# categorical_features = [1, 3, 5, 6, 7, 8, 9, 13]
-		# continuous_features = [0, 2, 10, 11, 12] # -> drop column 4 educatuin num
-		# train_x_cat = np.take(train_x, indices=categorical_features, axis=1)
-		# train_x_con = np.take(train_x, indices=continuous_features, axis=1).astype(np.float64)
-		# test_x_cat = np.take(test_x, indices=categorical_features, axis=1)
-		# test_x_con = np.take(test_x, indices=continuous_features, axis=1).astype(np.float64)
-
-		# #---transform categocial to index---#
-		# if to_index:
-		# 	for i in range(len(train_x_cat[0])):
-		# 		labeler = LabelEncoder()
-		# 		labeler.fit(train_x_cat[:,i])
-		# 		train_x_cat[:,i] = labeler.transform(train_x_cat[:,i])
-		# 		test_x_cat[:,i] = labeler.transform(test_x_cat[:,i])
-
-		# #---transform categocial to one hot---#
-		# if one_hot:
-		# 	encoder = OneHotEncoder(handle_unknown='ignore')
-		# 	encoder.fit(train_x_cat)
-		# 	train_x_cat = encoder.transform(train_x_cat).toarray()
-		# 	test_x_cat = encoder.transform(test_x_cat).toarray()
-
-		# #---concatenate and split---#
-		# train_x = np.concatenate((train_x_cat, train_x_con), axis=1)
-		# test_x = np.concatenate((test_x_cat, test_x_con), axis=1)
 		
-		#---normalize continuous data---#
 		if norm:
 			normalizer = StandardScaler()
 			train_x = normalizer.fit_transform(train_x.astype(np.float64))
@@ -196,7 +170,7 @@ class data_loader(object):
 		print('>> [Data Loader] Reading the Income dataset...')
 		train_x, train_y = self._read_data(self.train_path_income, dtype='str')
 		test_x = self._read_data(self.test_path_income, dtype='str', with_label=False)
-		train_x, test_x = self._preprocess_income(train_x, test_x, to_index=True, one_hot=True, norm=True)
+		train_x, test_x = self._preprocess_income(train_x, test_x, impute=False, one_hot=True, norm=True)
 		if self.verbose: self._check_and_display(train_x, train_y, test_x)
 		return train_x, train_y, test_x, None
 
