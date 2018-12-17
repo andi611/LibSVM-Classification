@@ -125,10 +125,10 @@
 
 | Kernel Type  | Cross Validation Accuracy | Cross Validation Accuracy with Scaling |
 | ------------- | ------------- | ------------- |
-| Linear | 84.68% | % |
-| Polynomial | 75.96% | % |
-| Radial Basis Function | 83.09% | % |
-| Sigmoid  | 82.99% | % |
+| Linear | 84.68% | 84.68% |
+| Polynomial | 75.96% | 75.96% |
+| Radial Basis Function | 83.09% | 83.09% |
+| Sigmoid  | 82.99% | 82.99% |
 
 ## Data Preprocessing
 
