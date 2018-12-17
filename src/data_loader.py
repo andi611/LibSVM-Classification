@@ -145,8 +145,8 @@ class data_loader(object):
 			categorical_features = [1, 3, 5, 6, 7, 8, 9, 13]
 			transformer = ColumnTransformer(transformers=[('one-hot-encoder', OneHotEncoder(sparse=False), categorical_features)], 
 											remainder='passthrough')
-			train_x = transform.fir_transform(train_x)
-			test_x = transform.fir_transform(test_x)
+			train_x = transformer.fit_transform(train_x)
+			test_x = transformer.transform(test_x)
 		# #---split into categorical and continuous---#
 		# categorical_features = [1, 3, 5, 6, 7, 8, 9, 13]
 		# continuous_features = [0, 2, 10, 11, 12] # -> drop column 4 educatuin num
@@ -177,8 +177,7 @@ class data_loader(object):
 		# #---normalize continuous data---#
 		if norm:
 			normalizer = StandardScaler()
-			normalizer.fit(train_x)
-			train_x = normalizer.transform(train_x)
+			train_x = normalizer.fit_transform(train_x)
 			test_x = normalizer.transform(test_x)
 
 		return train_x, test_x
