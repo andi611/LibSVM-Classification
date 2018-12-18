@@ -78,6 +78,16 @@
 	- `COMPARE_SCALE`: Run training and testing with different kernal settings in addition to data scaling and compare performance.
 	- `RUN_ALL`: Run everything above.
 
+### Run LibSVM on the Income Dataset:
+- `$ ./4_income.sh`
+- There are four modes that can be set manually in the script (Line 18-26):
+	- `RUN_BEST`: Run training and testing using the best parameter.
+	- `RUN_BEST_NFOLD`: Run training and testing using the best parameter with N-Fold cross validation.
+	- `COMPARE_KERNAL`: Run training and testing with different kernal settings and compare performance.
+	- `COMPARE_CSVM`: Run training and testing with C-SVM settings and compare performance.
+	- `COMPARE_SCALE`: Run training and testing with different kernal settings in addition to data scaling and compare performance.
+	- `RUN_ALL`: Run everything above.
+
 
 ## Result - Naive Bayes Performance
 
