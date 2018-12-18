@@ -19,13 +19,14 @@ MODEL_NAME=model_income.libsvm
 PROCESSED_TRAIN_DATA=income.tr
 PROCESSED_TEST_DATA=income.te
 MODE=RUN_BEST
+#MODE=RUN_BEST_NFOLD
 #MODE=COMPARE_KERNAL
 #MODE=COMPARE_CSVM
 #MODE=COMPARE_SCALE
 #MODE=RUN_ALL
 
-python3 data_loader.py --data_income --train_path_abalone ${TRAIN_DATA_PATH} --test_path_abalone ${TEST_DATA_PATH} \
-					   --output_train_path_abalone ${PROCESSED_TRAIN_DATA} --output_test_path_abalone ${PROCESSED_TEST_DATA}
+python3 data_loader.py --data_income --train_path_income ${TRAIN_DATA_PATH} --test_path_income ${TEST_DATA_PATH} \
+					   --output_train_path_income ${PROCESSED_TRAIN_DATA} --output_test_path_income ${PROCESSED_TEST_DATA}
 
 
 #---run best---#
@@ -35,12 +36,21 @@ if [ "${MODE}" = RUN_BEST ] || [ "${MODE}" = RUN_ALL ] ; then
 	echo "|------ Running with Best Parameters ------|"
 	echo "|------------------------------------------|"
 
-	$LIBSVM_PATH/svm-train -s 0 -t 0 -c 20 -e 0.1 -h 0 -m 1000 -v 10 -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}
+	$LIBSVM_PATH/svm-train -s 0 -t 0 -c 20 -e 0.1 -m 1000 -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}
 	echo "Training:"
 	$LIBSVM_PATH/svm-predict ${PROCESSED_TRAIN_DATA} ${MODEL_NAME} ${OUTPUT_FILE_PATH}.train
 	rm ${OUTPUT_FILE_PATH}.train 
 	echo "Testing:"
 	$LIBSVM_PATH/svm-predict ${PROCESSED_TEST_DATA} ${MODEL_NAME} ${OUTPUT_FILE_PATH}
+fi
+
+if [ "${MODE}" = RUN_BEST_NFOLD ] || [ "${MODE}" = RUN_ALL ] ; then
+	echo
+	echo "|---------------------------------------------------|"
+	echo "|------ Running with Best Parameters (N-FOLD) ------|"
+	echo "|---------------------------------------------------|"
+
+	$LIBSVM_PATH/svm-train -s 0 -t 0 -c 20 -e 0.1 -m 1000 -v 3 -q ${PROCESSED_TRAIN_DATA} ${MODEL_NAME}
 fi
 
 if [ "${MODE}" = COMPARE_KERNAL ] || [ "${MODE}" = RUN_ALL ] ; then

@@ -204,7 +204,7 @@ def write_for_LibSVM(file_path, x_data, y_data):
 	with open(file_path, 'w') as file:
 		for i in range(len(x_data)):
 			if y_data != None: file.write(str(y_data[i]))
-			else: file.write(str(0))
+			else: file.write(str(1))
 			line = ''
 			for j in range(len(x_data[i])):
 				line = line + ' ' + str(j+1) + ':' + str(x_data[i][j])

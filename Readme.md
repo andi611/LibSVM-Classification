@@ -119,8 +119,8 @@
 | Sigmoid  | 56.28% | 54.94% |
 
 ### Income Dataset Results
-- Best model training accuracy: **97.63%**
-- Best model testing accuracy: **84.55%**
+- Best model training accuracy: **85.23%**
+- Best model 3-Fold cross validation accuracy: **85.10%**
 
 | Kernel Type  | Cross Validation Accuracy | Cross Validation Accuracy with Sklearn Scaling | Cross Validation Accuracy with LibSVM Scaling |
 | ------------- | ------------- | ------------- | ------------- |
