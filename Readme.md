@@ -124,7 +124,7 @@
 
 | Kernel Type  | Cross Validation Accuracy | Cross Validation Accuracy with Sklearn Scaling | Cross Validation Accuracy with LibSVM Scaling |
 | ------------- | ------------- | ------------- | ------------- |
-| Linear | 53.67% | 85.07% | 84.99% |
+| Linear | 53.67% | **85.07%** | 84.99% |
 | Polynomial | 44.37% | 82.91% | 75.96% |
 | Radial Basis Function | 75.68% | 84.76% | 83.47% |
 | Sigmoid  | 75.96% | 83.11% | 83.41% |
